@@ -23,35 +23,46 @@ class PacmanAgent(Agent):
         if self.initial_state is None:
             self.initial_state = state
 
-        self.next_move = self.minimax(state)
+        value, self.next_move = self.minimax(state)
         return self.next_move
         
-    def minimax(self, state, depth=0, agentIndex=0):
+    def minimax(self, state, depth=0, agentIndex=0, alpha=float('-inf'), beta=float('inf')):
         # Terminal state or max depth
         if state.isWin() or state.isLose() or depth == self.depth:
-            return Directions.STOP
+            return self.utilityFunction(state), Directions.STOP
 
         # Check if all agents have had their turn this depth
         # If so, start a new depth
         if agentIndex == state.getNumAgents(): 
-            return self.minimax(state, depth + 1, 0)
+            return self.minimax(state, depth + 1, 0, alpha, beta)
 
         # Else, continue with current depth
         else:
             actions = state.getLegalActions(agentIndex)
             if len(actions) == 0:  # No more legal actions for this agent
-                return Directions.STOP
+                return self.utilityFunction(state), Directions.STOP
 
-            successors = []
             if agentIndex == 0:  # Pacman
-                successors = [(s, self.minimax(s, depth, agentIndex + 1), a) for s, a in state.generatePacmanSuccessors()]
+                value = float('-inf')
+                best_action = Directions.STOP
+                for s, a in state.generatePacmanSuccessors():
+                    new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
+                    if new_value > value:
+                        value, best_action = new_value, a
+                    if value > beta:
+                        return value, best_action
+                    alpha = max(alpha, value)
+                return value, best_action
             else:  # Ghost
-                successors = [(s, self.minimax(s, depth, agentIndex + 1), a) for s, a in state.generateGhostSuccessors(agentIndex)]
-            
-            if agentIndex == 0:  # Pacman
-                return max(successors, key=lambda x: self.utilityFunction(x[0]))[2]
-            else:  # Ghost
-                return min(successors, key=lambda x: self.utilityFunction(x[0]))[2]
+                value = float('inf')
+                for s, a in state.generateGhostSuccessors(agentIndex):
+                    new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
+                    if new_value < value:
+                        value = new_value
+                    if value < alpha:
+                        return value, Directions.STOP
+                    beta = min(beta, value)
+                return value, Directions.STOP
 
     def utilityFunction(self, state):
         score = 0
@@ -61,7 +72,7 @@ class PacmanAgent(Agent):
             score -= 500
 
         score += 10 * (self.initial_state.getNumFood() - state.getNumFood()) # Number of eaten food dots
-        score -= 5 * len(state.getCapsules())  # Number of remaining capsules
+        # score -= 5 * len(state.getCapsules())  # Number of remaining capsules
         score -= state.getScore()  # Time steps
 
         return score
