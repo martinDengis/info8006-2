@@ -9,7 +9,7 @@ class PacmanAgent(Agent):
         super().__init__()
         self.initial_state = None
         self.next_move = None
-        self.depth = 3
+        self.depth = 5
         
     def get_action(self, state):
         """Given a Pacman game state, returns a legal move.
