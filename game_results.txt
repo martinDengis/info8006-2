@@ -1,0 +1,27 @@
+Running command: python run.py --agent gilles --ghost dumby --layout small_adv
+Score: 516
+
+Running command: python run.py --agent gilles --ghost dumby --layout medium_adv
+No score found in the output.
+
+Running command: python run.py --agent gilles --ghost dumby --layout large_adv
+No score found in the output.
+
+Running command: python run.py --agent gilles --ghost greedy --layout small_adv
+Score: 516
+
+Running command: python run.py --agent gilles --ghost greedy --layout medium_adv
+Score: 537
+
+Running command: python run.py --agent gilles --ghost greedy --layout large_adv
+Score: 528
+
+Running command: python run.py --agent gilles --ghost smarty --layout small_adv
+Score: 516
+
+Running command: python run.py --agent gilles --ghost smarty --layout medium_adv
+Score: 537
+
+Running command: python run.py --agent gilles --ghost smarty --layout large_adv
+Score: 528
+
