@@ -24,7 +24,7 @@ class PacmanAgent(Agent):
         if self.initial_state is None:
             self.initial_state = state
 
-        can_win_next_move, action = self.look_ahead_for_win(state)
+        can_win_next_move, action = self.is_next_win(state)
         if can_win_next_move:
             return action
 
@@ -34,42 +34,43 @@ class PacmanAgent(Agent):
     def minimax(self, state, depth=0, agentIndex=0, alpha=float('-inf'), beta=float('inf')):
         # Terminal state or max depth
         if state.isWin() or state.isLose() or depth == self.depth:
-            return self.utilityFunction(state), Directions.STOP
+            return self.utility_function(state), Directions.STOP
 
-        # Check if all agents have had their turn this depth
-        # If so, start a new depth
-        if agentIndex == state.getNumAgents(): 
-            return self.minimax(state, depth + 1, 0, alpha, beta)
+        if agentIndex == 0:   # Pacman's turn (Maximizing player)
+            return self.max_value(state, depth, agentIndex, alpha, beta)
+        else:  # Ghosts' turn (Minimizing player)
+            return self.min_value(state, depth, agentIndex, alpha, beta)
 
-        # Else, continue with current depth
-        else:
-            actions = state.getLegalActions(agentIndex)
-            if len(actions) == 0:  # No more legal actions for this agent
-                return self.utilityFunction(state), Directions.STOP
-
-            if agentIndex == 0:  # Pacman
-                value = float('-inf')
-                best_action = Directions.STOP
-                for s, a in state.generatePacmanSuccessors():
-                    new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
-                    if new_value > value:
-                        value, best_action = new_value, a
-                    if value > beta:
-                        return value, best_action
-                    alpha = max(alpha, value)
+    def max_value(self, state, depth, agentIndex, alpha, beta):
+        value = float('-inf')
+        best_action = Directions.STOP
+        for s, a in state.generatePacmanSuccessors():
+            if agentIndex == state.getNumAgents() - 1:
+                new_value, _ = self.minimax(s, depth + 1, 0, alpha, beta)
+            else:
+                new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
+            if new_value > value:
+                value, best_action = new_value, a
+            if value > beta:
                 return value, best_action
-            else:  # Ghost
-                value = float('inf')
-                for s, a in state.generateGhostSuccessors(agentIndex):
-                    new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
-                    if new_value < value:
-                        value = new_value
-                    if value < alpha:
-                        return value, Directions.STOP
-                    beta = min(beta, value)
-                return value, Directions.STOP
+            alpha = max(alpha, value)
+        return value, best_action
 
-    def utilityFunction(self, state):
+    def min_value(self, state, depth, agentIndex, alpha, beta):
+        value = float('inf')
+        for s, a in state.generateGhostSuccessors(agentIndex):
+            if agentIndex == state.getNumAgents() - 1:
+                new_value, _ = self.minimax(s, depth + 1, 0, alpha, beta)
+            else:
+                new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
+            if new_value < value:
+                value = new_value
+            if value < alpha:
+                return value, Directions.STOP
+            beta = min(beta, value)
+        return value, Directions.STOP
+
+    def utility_function(self, state):
         score = 0
         if state.isWin():
             score += 500
@@ -83,7 +84,7 @@ class PacmanAgent(Agent):
         for i in range(1, state.getNumAgents()):
             ghost_distance = manhattanDistance(state.getPacmanPosition(), state.getGhostPosition(i))
             if ghost_distance < 2:  # If the ghost is too close
-                score -= 200  # Subtract a large value from the score
+                score -= 200
 
         # Prioritize going to the closest food dot
         food_list = state.getFood().asList()
@@ -93,8 +94,8 @@ class PacmanAgent(Agent):
             score -= closest_food_distance
 
         return score
-    
-    def look_ahead_for_win(self, state):
+
+    def is_next_win(self, state):
     # Check if Pacman can win in the next move
         for action in state.getLegalActions(0):  # 0 for Pacman
             successor = state.generatePacmanSuccessor(action)
