@@ -121,21 +121,24 @@ class PacmanAgent(Agent):
         elif state.isLose():
             score -= 500
 
-        score += 10 * (self.initial_state.getNumFood() - state.getNumFood())  # Number of eaten food dots
-        score -= state.getScore()  # Time steps
+        # Number of eaten food dots + time steps
+        score += 10 * (self.initial_state.getNumFood() - state.getNumFood())
+        score -= state.getScore()
 
         # Penalize encounters with ghosts
+        pacman_pos = state.getPacmanPosition()
         for i in range(1, state.getNumAgents()):
-            ghost_distance = manhattanDistance(state.getPacmanPosition(), state.getGhostPosition(i))
-            if ghost_distance < 2:  # If the ghost is too close
+            ghost_dist = manhattanDistance(pacman_pos,state.getGhostPosition(i))
+            if ghost_dist < 2:  # If the ghost is too close
                 score -= 200
 
         # Prioritize going to the closest food dot
         food_list = state.getFood().asList()
         if food_list:
-            pacman_pos = state.getPacmanPosition()
-            closest_food_distance = min(manhattanDistance(pacman_pos, food) for food in food_list)
-            score -= closest_food_distance
+            closest_food_dist = min(
+                manhattanDistance(pacman_pos, food) for food in food_list
+            )
+            score -= closest_food_dist
 
         return score
 
