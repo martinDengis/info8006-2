@@ -10,8 +10,8 @@ with open('game_results.txt', 'w') as results_file:
     # Iterate over all combinations of ghosts and layouts
     for ghost in ghosts:
         for layout in layouts:
-            # Construct the command (CHANGER NOM DE FICHIER)
-            command = f'python run.py --agent martin --ghost {ghost} --layout {layout}'
+            # Construct the command
+            command = f'python run.py --agent hminimax_gilles --ghost {ghost} --layout {layout}'
             results_file.write(f'Running command: {command}\n')
 
             # Run the command
@@ -20,17 +20,33 @@ with open('game_results.txt', 'w') as results_file:
                 output = subprocess.check_output(command, shell=True, timeout=120, stderr=subprocess.STDOUT)
                 output = output.decode('utf-8')  # Decode output to string
 
-                # Check for the score in the output
+                # Use regular expressions to find the score, time, and nodes in the output
                 score_match = re.search(r'Score: (-?\d+)', output)
+                time_match = re.search(r'Computation time: ([\d.]+)', output)
+                nodes_match = re.search(r'Expanded nodes: (\d+)', output)
+
+                # Write the score, time, and nodes to the results file
                 if score_match:
                     score = int(score_match.group(1))
                     results_file.write(f'Score: {score}\n')
-
-                    # Check if the score is below -50
-                    if score < -50:
-                        results_file.write('Score dropped below -50, terminating this run.\n')
                 else:
                     results_file.write('No score found in the output.\n')
+
+                if time_match:
+                    time = float(time_match.group(1))
+                    results_file.write(f'Computation time: {time}\n')
+                else:
+                    results_file.write('No computation time found in the output.\n')
+
+                if nodes_match:
+                    nodes = int(nodes_match.group(1))
+                    results_file.write(f'Expanded nodes: {nodes}\n')
+                else:
+                    results_file.write('No expanded nodes count found in the output.\n')
+
+                # Check if the score is below a certain threshold
+                if score < -50:
+                    results_file.write('Score dropped below -50, terminating this run.\n')
 
             except subprocess.TimeoutExpired:
                 results_file.write('Game timed out.\n')
