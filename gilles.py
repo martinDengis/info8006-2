@@ -3,7 +3,7 @@ from pacman_module.util import manhattanDistance
 
 class PacmanAgent(Agent):
     def __init__(self):
-        self.depth = 3
+        self.depth = 4
 
     def look_ahead_for_win(self, state):
     # Check if Pacman can win in the next move
@@ -32,7 +32,6 @@ class PacmanAgent(Agent):
         if state.isWin() or state.isLose() or depth == 0:
             return Directions.STOP, self.evaluation_function(state)
 
-        num_agents = state.getNumAgents()
         if agentIndex == 0:  # Pacman's turn (Maximizing player)
             return self.max_value(state, depth, agentIndex)
         else:  # Ghosts' turn (Minimizing player)
@@ -80,7 +79,7 @@ class PacmanAgent(Agent):
     def evaluation_function(self, state):
         """
         The evaluation function for the current state.
-        Prioritizes winning over ghost avoidance when close to winning.
+        Prioritizes eating food and staying alive over ghost avoidance.
         """
         if state.isWin():
             return float('inf')  # Maximize score for winning state
@@ -89,20 +88,22 @@ class PacmanAgent(Agent):
 
         pacman_pos = state.getPacmanPosition()
         food_list = state.getFood().asList()
-        ghost_states = state.getGhostStates()
-        ghost_positions = [ghost.getPosition() for ghost in ghost_states]
+        ghost_positions = [state.getGhostPosition(i) for i in range(1, state.getNumAgents())]
 
         # Calculate the distance to the nearest food dot
         min_food_distance = min([manhattanDistance(pacman_pos, food) for food in food_list])
+        # Find the closest food position
+        closest_food_pos = min(food_list, key=lambda x: manhattanDistance(pacman_pos, x))
 
         # Calculate the distance to the nearest ghost
         min_ghost_distance = min([manhattanDistance(pacman_pos, ghost_pos) for ghost_pos in ghost_positions])
+        # Find the closest ghost position
+        closest_ghost_pos = min(ghost_positions, key=lambda x: manhattanDistance(pacman_pos, x))
 
-        # Check if only one food dot is left, prioritize eating it
-        if len(food_list) == 1:
-            # Large positive value for being next to the last food dot
-            if min_food_distance == 1:
-                return float('inf') - 1
+        # Check if Pacman is between the ghost and the food
+        if manhattanDistance(pacman_pos, closest_ghost_pos) > manhattanDistance(closest_food_pos, closest_ghost_pos):
+            # Pacman is closer to the food than the ghost is, prioritize getting the food
+            min_food_distance = 0  # This will give the highest priority to getting the food
 
         # Adjust the score based on the proximity of food and ghosts
         score = state.getScore()
@@ -113,4 +114,5 @@ class PacmanAgent(Agent):
             score -= 500  # Large penalty for being close to a ghost
 
         return score
+
 
