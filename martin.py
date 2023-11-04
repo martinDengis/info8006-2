@@ -1,5 +1,6 @@
 from pacman_module.game import Agent, Directions
 from pacman_module.pacman import GameState
+from pacman_module.util import manhattanDistance
 
 
 class PacmanAgent(Agent):   
@@ -9,7 +10,7 @@ class PacmanAgent(Agent):
         super().__init__()
         self.initial_state = None
         self.next_move = None
-        self.depth = 5
+        self.depth = 4
         
     def get_action(self, state):
         """Given a Pacman game state, returns a legal move.
@@ -23,7 +24,11 @@ class PacmanAgent(Agent):
         if self.initial_state is None:
             self.initial_state = state
 
-        value, self.next_move = self.minimax(state)
+        can_win_next_move, action = self.look_ahead_for_win(state)
+        if can_win_next_move:
+            return action
+
+        _, self.next_move = self.minimax(state)
         return self.next_move
         
     def minimax(self, state, depth=0, agentIndex=0, alpha=float('-inf'), beta=float('inf')):
@@ -71,8 +76,28 @@ class PacmanAgent(Agent):
         elif state.isLose():
             score -= 500
 
-        score += 10 * (self.initial_state.getNumFood() - state.getNumFood()) # Number of eaten food dots
-        # score -= 5 * len(state.getCapsules())  # Number of remaining capsules
+        score += 10 * (self.initial_state.getNumFood() - state.getNumFood())  # Number of eaten food dots
         score -= state.getScore()  # Time steps
 
+        # Penalize encounters with ghosts
+        for i in range(1, state.getNumAgents()):
+            ghost_distance = manhattanDistance(state.getPacmanPosition(), state.getGhostPosition(i))
+            if ghost_distance < 2:  # If the ghost is too close
+                score -= 200  # Subtract a large value from the score
+
+        # Prioritize going to the closest food dot
+        food_list = state.getFood().asList()
+        if food_list:
+            pacman_pos = state.getPacmanPosition()
+            closest_food_distance = min(manhattanDistance(pacman_pos, food) for food in food_list)
+            score -= closest_food_distance
+
         return score
+    
+    def look_ahead_for_win(self, state):
+    # Check if Pacman can win in the next move
+        for action in state.getLegalActions(0):  # 0 for Pacman
+            successor = state.generatePacmanSuccessor(action)
+            if successor.isWin():
+                return True, action
+        return False, None
