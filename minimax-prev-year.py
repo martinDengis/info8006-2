@@ -162,7 +162,7 @@ def actualize_root(root, state):
 
 
 class PacmanAgent(Agent):
-    def __init__(self, args):
+    def __init__(self):
         self.root = None
         self.depth = 0
         self.fruit = 0

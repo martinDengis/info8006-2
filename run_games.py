@@ -11,7 +11,7 @@ with open('game_results.txt', 'w') as results_file:
     for ghost in ghosts:
         for layout in layouts:
             # Construct the command (CHANGER NOM DE FICHIER)
-            command = f'python run.py --agent gilles --ghost {ghost} --layout {layout}'
+            command = f'python run.py --agent martin --ghost {ghost} --layout {layout}'
             results_file.write(f'Running command: {command}\n')
 
             # Run the command

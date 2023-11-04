@@ -1,5 +1,4 @@
 from pacman_module.game import Agent, Directions
-from pacman_module.pacman import GameState
 from pacman_module.util import manhattanDistance
 
 
@@ -8,10 +7,9 @@ class PacmanAgent(Agent):
 
     def __init__(self):
         super().__init__()
-        self.initial_state = None
-        self.next_move = None
+        self.initial_state = None # To retrieve initial nb of food dots
         self.depth = 4
-        
+
     def get_action(self, state):
         """Given a Pacman game state, returns a legal move.
 
@@ -28,10 +26,22 @@ class PacmanAgent(Agent):
         if can_win_next_move:
             return action
 
-        _, self.next_move = self.minimax(state)
-        return self.next_move
-        
+        _, next_move = self.minimax(state)
+        return next_move
+
     def minimax(self, state, depth=0, agentIndex=0, alpha=float('-inf'), beta=float('inf')):
+        """Minimax algorithm with alpha-beta pruning for Pacman game.
+
+        Arguments:
+            state: a game state. See API or class `pacman.GameState`.
+            depth: the current depth of the search tree.
+            agentIndex: the index of the current agent.
+            alpha: the best value that the maximizing player can guarantee.
+            beta: the best value that the minimizing player can guarantee.
+
+        Return:
+            A tuple containing the best score value and corresponding action.
+        """
         # Terminal state or max depth
         if state.isWin() or state.isLose() or depth == self.depth:
             return self.utility_function(state), Directions.STOP
@@ -42,6 +52,19 @@ class PacmanAgent(Agent):
             return self.min_value(state, depth, agentIndex, alpha, beta)
 
     def max_value(self, state, depth, agentIndex, alpha, beta):
+        """ Returns the maximum value and corresponding action 
+        for the given state and agent.
+
+        Arguments:
+            state: a game state. See API or class `pacman.GameState`.
+            depth: the current depth of the search tree.
+            agentIndex: the index of the current agent.
+            alpha: the current alpha value for a-B pruning.
+            beta: the current beta value for a-B pruning.
+
+        Return:
+            A tuple containing the maximum value and corresponding action.
+        """
         value = float('-inf')
         best_action = Directions.STOP
         for s, a in state.generatePacmanSuccessors():
@@ -57,6 +80,19 @@ class PacmanAgent(Agent):
         return value, best_action
 
     def min_value(self, state, depth, agentIndex, alpha, beta):
+        """ Returns the minimum value and corresponding action 
+        for the given state and agent.
+
+        Arguments:
+            state: a game state. See API or class `pacman.GameState`.
+            depth: the current depth of the search tree.
+            agentIndex: the index of the current agent.
+            alpha: the current alpha value for a-B pruning.
+            beta: the current beta value for a-B pruning.
+
+        Return:
+            A tuple containing the minimum value and corresponding action.
+        """
         value = float('inf')
         for s, a in state.generateGhostSuccessors(agentIndex):
             if agentIndex == state.getNumAgents() - 1:
@@ -71,6 +107,14 @@ class PacmanAgent(Agent):
         return value, Directions.STOP
 
     def utility_function(self, state):
+        """Calculates the utility score of a given game state.
+
+        Arguments:
+            state: a game state. See API or class `pacman.GameState`.
+
+        Return:
+            The utility score of the given game state.
+        """
         score = 0
         if state.isWin():
             score += 500
@@ -96,7 +140,16 @@ class PacmanAgent(Agent):
         return score
 
     def is_next_win(self, state):
-    # Check if Pacman can win in the next move
+        """Check if Pacman can win in the next move.
+
+        Arguments:
+            state: a game state. See API or class `pacman.GameState`.
+
+        Return:
+            A tuple containing:
+            - boolean indicating whether Pacman can win in the next move,
+            - action that would lead to a win if it exists, or None otherwise.
+        """
         for action in state.getLegalActions(0):  # 0 for Pacman
             successor = state.generatePacmanSuccessor(action)
             if successor.isWin():
