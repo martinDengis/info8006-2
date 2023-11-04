@@ -38,7 +38,7 @@ class PacmanAgent(Agent):
         ghost_distances = [manhattanDistance(pacman_pos, ghost_pos) for ghost_pos in ghost_positions]
         for dist in ghost_distances:
             if dist > 0:
-                # The further the ghosts, the better, but the effect diminishes with distance
+                # The further the ghosts, the better, but the effect diminishes with closer distance
                 score += 10 / dist
 
         # Adjust score based on remaining food
@@ -50,6 +50,13 @@ class PacmanAgent(Agent):
         if food_list:
             closest_food_dist = min(manhattanDistance(pacman_pos, food) for food in food_list)
             score -= closest_food_dist
+
+        # # Adjust score based on sum of distances to all food dots
+        # if food_list:
+        #     food_distances = [manhattanDistance(pacman_pos, food) for food in food_list]
+        #     sum_food_distances = sum(food_distances)
+        #     score -= sum_food_distances
+
 
         return score
 
