@@ -21,11 +21,9 @@ class PacmanAgent(Agent):
         # Dynamic depth adjustment based on the remaining food
         remaining_food = len(state.getFood().asList())
         if remaining_food < 3:
-            self.depth = 5  # Increase depth for endgame
+            self.depth = 4  # Increase depth for endgame
         elif remaining_food < 5:
             self.depth = 4  # Moderate depth for midgame
-        elif remaining_food < 6:
-            self.depth = 3  # Moderate depth for midgame
         else:
             self.depth = 2  # Initial depth for early game
 
