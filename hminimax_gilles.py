@@ -18,17 +18,44 @@ class PacmanAgent(Agent):
         if can_win_next_move:
             return action
 
-        # Dynamic depth adjustment based on the remaining food
+        # Determine the size of the maze
+        maze_width, maze_height = state.getFood().width, state.getFood().height
+        maze_size = maze_width * maze_height
+
+        # Define thresholds for what you consider small, medium, and large mazes
+        small_threshold = 10 * 10  # Example threshold for small maze
+        medium_threshold = 20 * 20  # Example threshold for medium maze
+
+        # Dynamic depth adjustment based on the remaining food and maze size
         remaining_food = len(state.getFood().asList())
-        if remaining_food < 3:
-            self.depth = 4  # Increase depth for endgame
-        elif remaining_food < 5:
-            self.depth = 4  # Moderate depth for midgame
+        if maze_size <= small_threshold:
+            # Adjustments for small maze
+            if remaining_food < 3:
+                self.depth = 4
+            elif remaining_food < 5:
+                self.depth = 3
+            else:
+                self.depth = 2
+        elif maze_size <= medium_threshold:
+            # Adjustments for medium maze
+            if remaining_food < 3:
+                self.depth = 5
+            elif remaining_food < 5:
+                self.depth = 4
+            else:
+                self.depth = 3
         else:
-            self.depth = 2  # Initial depth for early game
+            # Adjustments for large maze
+            if remaining_food < 3:
+                self.depth = 6
+            elif remaining_food < 5:
+                self.depth = 5
+            else:
+                self.depth = 4
 
         _, next_move = self.minimax(state)
         return next_move
+
 
     def heuristic_function(self, state):
         """
