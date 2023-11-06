@@ -18,6 +18,17 @@ class PacmanAgent(Agent):
         if can_win_next_move:
             return action
 
+        # Dynamic depth adjustment based on the remaining food
+        remaining_food = len(state.getFood().asList())
+        if remaining_food < 3:
+            self.depth = 5  # Increase depth for endgame
+        elif remaining_food < 5:
+            self.depth = 4  # Moderate depth for midgame
+        elif remaining_food < 6:
+            self.depth = 3  # Moderate depth for midgame
+        else:
+            self.depth = 2  # Initial depth for early game
+
         _, next_move = self.minimax(state)
         return next_move
 
@@ -49,7 +60,7 @@ class PacmanAgent(Agent):
         # Adjust score based on distance to the closest food dot
         if food_list:
             closest_food_dist = min(manhattanDistance(pacman_pos, food) for food in food_list)
-            score -= 2 * closest_food_dist
+            score -= 3 * closest_food_dist
 
         # Adjust score based on sum of distances to all food dots
         # if food_list:
