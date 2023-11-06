@@ -1,6 +1,7 @@
 from pacman_module.game import Agent, Directions
 from pacman_module.util import manhattanDistance
 
+
 class PacmanAgent(Agent):
     """Pacman agent based on minimax adversial search."""
 
@@ -22,12 +23,13 @@ class PacmanAgent(Agent):
         maze_width, maze_height = state.getFood().width, state.getFood().height
         maze_size = maze_width * maze_height
 
-        # Define thresholds for what you consider small, medium, and large mazes
-        small_threshold = 10 * 10  # Example threshold for small maze
-        medium_threshold = 20 * 20  # Example threshold for medium maze
+        # Define thresholds for small, medium, and large mazes
+        small_threshold = 10 * 10
+        medium_threshold = 20 * 20
 
         # Dynamic depth adjustment based on the remaining food and maze size
         remaining_food = len(state.getFood().asList())
+        # remaining_food = state.getNumFood()
         if maze_size <= small_threshold:
             # Adjustments for small maze
             if remaining_food < 3:
@@ -53,7 +55,7 @@ class PacmanAgent(Agent):
             else:
                 self.depth = 4
 
-        _, next_move = self.minimax(state)
+        _, next_move = self.hminimax(state)
         return next_move
 
 
@@ -95,8 +97,8 @@ class PacmanAgent(Agent):
 
         return score
 
-    def minimax(self, state, depth=0, agentIndex=0, alpha=float('-inf'), beta=float('inf')):
-        """Minimax algorithm with alpha-beta pruning and heuristic evaluation for Pacman game.
+    def hminimax(self, state, depth=0, agentIndex=0, alpha=float('-inf'), beta=float('inf')):
+        """H-Minimax algorithm with alpha-beta pruning and heuristic evaluation for Pacman game.
 
         Arguments:
             state: a game state. See API or class `pacman.GameState`.
@@ -137,7 +139,7 @@ class PacmanAgent(Agent):
             if agentIndex == state.getNumAgents() - 1:
                 new_value, _ = self.minimax(s, depth + 1, 0, alpha, beta)
             else:
-                new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
+                new_value, _ = self.hminimax(s, depth, agentIndex + 1, alpha, beta)
             if new_value > value:
                 value, best_action = new_value, a
             if value > beta:
@@ -155,9 +157,9 @@ class PacmanAgent(Agent):
 
         for s, a in ordered_successors:
             if agentIndex == state.getNumAgents() - 1:
-                new_value, _ = self.minimax(s, depth + 1, 0, alpha, beta)
+                new_value, _ = self.hminimax(s, depth + 1, 0, alpha, beta)
             else:
-                new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
+                new_value, _ = self.hminimax(s, depth, agentIndex + 1, alpha, beta)
             if new_value < value:
                 value, best_action = new_value, a
             if value < alpha:

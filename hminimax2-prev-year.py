@@ -94,7 +94,7 @@ def distance_to_fruit(state):
     pos1 = state.getPacmanPosition()
     for i in range(food_grid.width):
         for j in range(food_grid.height):
-            if food_grid[i][j]:
+            if food_grid[i][j]: 
                 fruits.append((i, j))
     for pos2 in fruits:
         dist += manhattanDistance(pos1, pos2)
@@ -180,7 +180,7 @@ def minimax(root):
 
 
 class PacmanAgent(Agent):
-    def __init__(self, args):
+    def __init__(self):
         self.root = None
         self.depth = 0
         self.fruit = 0

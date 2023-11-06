@@ -1,45 +1,45 @@
-Running command: python run.py --agent hminimax_gilles --ghost dumby --layout small_adv
+Running command: python run.py --agent martin --ghost dumby --layout small_adv
 Score: 516
-Computation time: 0.009532451629638672
-Expanded nodes: 57
+Computation time: 0.007364749908447266
+Expanded nodes: 7
 
-Running command: python run.py --agent hminimax_gilles --ghost dumby --layout medium_adv
+Running command: python run.py --agent martin --ghost dumby --layout medium_adv
 Score: 539
-Computation time: 0.28130602836608887
-Expanded nodes: 1557
+Computation time: 0.053072452545166016
+Expanded nodes: 42
 
-Running command: python run.py --agent hminimax_gilles --ghost dumby --layout large_adv
+Running command: python run.py --agent martin --ghost dumby --layout large_adv
 Score: 536
-Computation time: 4.6133644580841064
-Expanded nodes: 20361
+Computation time: 19.33768320083618
+Expanded nodes: 16600
 
-Running command: python run.py --agent hminimax_gilles --ghost greedy --layout small_adv
+Running command: python run.py --agent martin --ghost greedy --layout small_adv
 Score: 516
-Computation time: 0.0
-Expanded nodes: 57
+Computation time: 0.007995128631591797
+Expanded nodes: 7
 
-Running command: python run.py --agent hminimax_gilles --ghost greedy --layout medium_adv
-Score: 539
-Computation time: 0.2083740234375
-Expanded nodes: 1178
+Running command: python run.py --agent martin --ghost greedy --layout medium_adv
+Score: 537
+Computation time: 0.06873655319213867
+Expanded nodes: 44
 
-Running command: python run.py --agent hminimax_gilles --ghost greedy --layout large_adv
+Running command: python run.py --agent martin --ghost greedy --layout large_adv
 Score: 534
-Computation time: 2.9422764778137207
-Expanded nodes: 12077
+Computation time: 15.451620817184448
+Expanded nodes: 11723
 
-Running command: python run.py --agent hminimax_gilles --ghost smarty --layout small_adv
+Running command: python run.py --agent martin --ghost smarty --layout small_adv
 Score: 516
-Computation time: 0.0
-Expanded nodes: 57
+Computation time: 0.012470245361328125
+Expanded nodes: 7
 
-Running command: python run.py --agent hminimax_gilles --ghost smarty --layout medium_adv
-Score: 539
-Computation time: 0.2532527446746826
-Expanded nodes: 1204
+Running command: python run.py --agent martin --ghost smarty --layout medium_adv
+Score: 537
+Computation time: 0.11067628860473633
+Expanded nodes: 44
 
-Running command: python run.py --agent hminimax_gilles --ghost smarty --layout large_adv
+Running command: python run.py --agent martin --ghost smarty --layout large_adv
 Score: 534
-Computation time: 2.9795570373535156
-Expanded nodes: 12077
+Computation time: 13.657814502716064
+Expanded nodes: 11723
 
