@@ -19,12 +19,13 @@ def key(state):
         tuple(state.getCapsules()),
     )
 
-class PacmanAgent(Agent):   
+
+class PacmanAgent(Agent):
     """Pacman agent based on minimax adversial search."""
 
     def __init__(self):
         super().__init__()
-        self.initial_state = None # To retrieve initial nb of food dots
+        self.initial_state = None   # To retrieve initial nb of food dots
         self.depth = 4
         self.transposition_table = {}
 
@@ -47,42 +48,42 @@ class PacmanAgent(Agent):
         _, next_move = self.minimax(state)
         return next_move
 
-    def minimax(self, state, depth=0, agentIndex=0, alpha=float('-inf'), beta=float('inf')):
+    def minimax(self, s, depth=0, agent=0, a=float('-inf'), b=float('inf')):
         """Minimax algorithm with alpha-beta pruning for Pacman game.
 
         Arguments:
-            state: a game state. See API or class `pacman.GameState`.
+            s: a game state. See API or class `pacman.GameState`.
             depth: the current depth of the search tree.
-            agentIndex: the index of the current agent.
-            alpha: the best value that the maximizing player can guarantee.
-            beta: the best value that the minimizing player can guarantee.
+            agent: the index of the current agent.
+            a (alpha): the best value that the maximizing player can guarantee.
+            b (beta): the best value that the minimizing player can guarantee.
 
         Return:
             A tuple containing the best score value and corresponding action.
         """
-        curr_key = key(state)
+        curr_key = key(s)
         if curr_key in self.transposition_table:
             return self.transposition_table[curr_key], Directions.STOP
-        
+
         # Terminal state or max depth
-        if state.isWin() or state.isLose() or depth == self.depth:
-            utility = self.utility(state)
+        if s.isWin() or s.isLose() or depth == self.depth:
+            utility = self.utility(s)
             self.transposition_table[curr_key] = utility
             return utility, Directions.STOP
 
-        if agentIndex == 0:   # Pacman's turn (Maximizing player)
-            return self.max_value(state, depth, agentIndex, alpha, beta)
+        if agent == 0:   # Pacman's turn (Maximizing player)
+            return self.max_value(s, depth, agent, a, b)
         else:  # Ghosts' turn (Minimizing player)
-            return self.min_value(state, depth, agentIndex, alpha, beta)
+            return self.min_value(s, depth, agent, a, b)
 
-    def max_value(self, state, depth, agentIndex, alpha, beta):
-        """Returns the maximum value and corresponding action 
+    def max_value(self, state, depth, agent, alpha, beta):
+        """Returns the maximum value and corresponding action
         for the given state and agent.
 
         Arguments:
             state: a game state. See API or class `pacman.GameState`.
             depth: the current depth of the search tree.
-            agentIndex: the index of the current agent.
+            agent: the index of the current agent.
             alpha: the current alpha value for a-B pruning.
             beta: the current beta value for a-B pruning.
 
@@ -92,10 +93,10 @@ class PacmanAgent(Agent):
         value = float('-inf')
         best_action = Directions.STOP
         for s, a in state.generatePacmanSuccessors():
-            if agentIndex == state.getNumAgents() - 1:
+            if agent == state.getNumAgents() - 1:
                 new_value, _ = self.minimax(s, depth + 1, 0, alpha, beta)
             else:
-                new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
+                new_value, _ = self.minimax(s, depth, agent+1, alpha, beta)
             if new_value > value:
                 value, best_action = new_value, a
             if value > beta:
@@ -103,14 +104,14 @@ class PacmanAgent(Agent):
             alpha = max(alpha, value)
         return value, best_action
 
-    def min_value(self, state, depth, agentIndex, alpha, beta):
-        """Returns the minimum value and corresponding action 
+    def min_value(self, state, depth, agent, alpha, beta):
+        """Returns the minimum value and corresponding action
         for the given state and agent.
 
         Arguments:
             state: a game state. See API or class `pacman.GameState`.
             depth: the current depth of the search tree.
-            agentIndex: the index of the current agent.
+            agent: the index of the current agent.
             alpha: the current alpha value for a-B pruning.
             beta: the current beta value for a-B pruning.
 
@@ -118,11 +119,11 @@ class PacmanAgent(Agent):
             A tuple containing the minimum value and corresponding action.
         """
         value = float('inf')
-        for s, a in state.generateGhostSuccessors(agentIndex):
-            if agentIndex == state.getNumAgents() - 1:
+        for s, a in state.generateGhostSuccessors(agent):
+            if agent == state.getNumAgents() - 1:
                 new_value, _ = self.minimax(s, depth + 1, 0, alpha, beta)
             else:
-                new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
+                new_value, _ = self.minimax(s, depth, agent+1, alpha, beta)
             if new_value < value:
                 value = new_value
             if value < alpha:
@@ -148,7 +149,9 @@ class PacmanAgent(Agent):
         # Penalize encounters with ghosts
         pacman_pos = state.getPacmanPosition()
         for i in range(1, state.getNumAgents()):
-            ghost_dist = manhattanDistance(pacman_pos,state.getGhostPosition(i))
+            ghost_dist = manhattanDistance(
+                pacman_pos, state.getGhostPosition(i)
+            )
             if ghost_dist < 2:  # If the ghost is too close
                 score -= 200
 

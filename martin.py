@@ -7,7 +7,7 @@ class PacmanAgent(Agent):
 
     def __init__(self):
         super().__init__()
-        self.initial_state = None # To retrieve initial nb of food dots
+        self.initial_state = None   # To retrieve initial nb of food dots
         self.depth = None
 
     def get_action(self, state):
@@ -33,12 +33,12 @@ class PacmanAgent(Agent):
     def scale_depth(self):
         """ Scales the depth of the search tree based on the size of the maze.
 
-        If the maze size is smaller than or equal to 100, the depth is set to 1.
+        If the maze size is <= 100, the depth is set to 1.
         Otherwise, the depth is set to 4.
 
         Args: None
         Returns: None
-        """ 
+        """
         # Determine the size of the maze
         maze_size = self.initial_state.getFood().width \
             * self.initial_state.getFood().height
@@ -68,8 +68,8 @@ class PacmanAgent(Agent):
                 return True, action
         return False, None
 
-    def hminimax(self, state, depth=0, agentIndex=0, alpha=float('-inf'), beta=float('inf')):
-        """H-Minimax algorithm with alpha-beta pruning and 
+    def hminimax(self, s, depth=0, agent=0, a=float('-inf'), b=float('inf')):
+        """H-Minimax algorithm with alpha-beta pruning and
         heuristic evaluation for Pacman game.
 
         Args:
@@ -83,13 +83,13 @@ class PacmanAgent(Agent):
             A tuple containing the best score value and corresponding action.
         """
         # Terminal state or max depth = Cut-off test
-        if self.cutoff(depth) or self.terminal(state):
-            return self.eval(state), Directions.STOP
+        if self.cutoff(depth) or self.terminal(s):
+            return self.eval(s), Directions.STOP
 
-        if agentIndex == 0: # Pacman's turn (Maximizing player)
-            return self.max_value(state, depth, agentIndex, alpha, beta)
-        else: # Ghosts' turn (Minimizing player)
-            return self.min_value(state, depth, agentIndex, alpha, beta)
+        if agent == 0:  # Pacman's turn (Maximizing player)
+            return self.max_value(s, depth, agent, a, b)
+        else:   # Ghosts' turn (Minimizing player)
+            return self.min_value(s, depth, agent, a, b)
 
     def cutoff(self, depth):
         """Determine if the search should be stopped at this depth.
@@ -101,9 +101,9 @@ class PacmanAgent(Agent):
             bool: True if the search should be stopped, False otherwise.
         """
         return depth >= self.depth
-    
+
     def terminal(self, state):
-        """Determines whether the given state is a terminal state, 
+        """Determines whether the given state is a terminal state,
         i.e. whether the game is over.
 
         Args:
@@ -113,7 +113,7 @@ class PacmanAgent(Agent):
             True if the game is over (either win or lose), False otherwise.
         """
         return state.isWin() or state.isLose()
-    
+
     def eval(self, state):
         """Estimates the expected utility of the game from a given state.
 
@@ -122,7 +122,7 @@ class PacmanAgent(Agent):
 
         Returns:
             An estimate of the expected utility from the given game state.
-        """       
+        """
         # Expected utility estimate
         evaluation = state.getScore()
 
@@ -140,11 +140,11 @@ class PacmanAgent(Agent):
         ]
         for dist in ghost_distances:
             if dist > 0:
-                # The further the ghosts, the better, 
+                # The further the ghosts, the better,
                 # but the effect diminishes with closer distance
                 evaluation += 10 / dist
 
-         # Adjust evaluation based on remaining food
+        # Adjust evaluation based on remaining food
         evaluation -= 2 * state.getNumFood()
 
         # Adjust evaluation based on distance to the closest food dot
@@ -158,7 +158,7 @@ class PacmanAgent(Agent):
         return evaluation
 
     def max_value(self, state, depth, agentIndex, alpha, beta):
-        """Returns the maximum value and corresponding action 
+        """Returns the maximum value and corresponding action
         for the given state and agent.
 
         Arguments:
@@ -195,7 +195,7 @@ class PacmanAgent(Agent):
         return value, best_action
 
     def min_value(self, state, depth, agentIndex, alpha, beta):
-        """Returns the minimum value and corresponding action 
+        """Returns the minimum value and corresponding action
         for the given state and agent.
 
         Arguments:
@@ -230,4 +230,3 @@ class PacmanAgent(Agent):
                 return value, best_action
             beta = min(beta, value)
         return value, best_action
-    
