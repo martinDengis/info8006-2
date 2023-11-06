@@ -1,12 +1,12 @@
 Running command: python run.py --agent hminimax_gilles --ghost dumby --layout small_adv
 Score: 516
-Computation time: 0.0
-Expanded nodes: 57
+Computation time: 0.010504961013793945
+Expanded nodes: 33
 
 Running command: python run.py --agent hminimax_gilles --ghost dumby --layout medium_adv
-Score: 536
-Computation time: 1.752110242843628
-Expanded nodes: 11695
+Score: 539
+Computation time: 0.2913823127746582
+Expanded nodes: 1829
 
 Running command: python run.py --agent hminimax_gilles --ghost dumby --layout large_adv
 No score found in the output.
@@ -15,31 +15,31 @@ No expanded nodes count found in the output.
 
 Running command: python run.py --agent hminimax_gilles --ghost greedy --layout small_adv
 Score: 516
-Computation time: 0.0
-Expanded nodes: 57
+Computation time: 0.0025072097778320312
+Expanded nodes: 33
 
 Running command: python run.py --agent hminimax_gilles --ghost greedy --layout medium_adv
 Score: 539
-Computation time: 0.8683793544769287
-Expanded nodes: 6095
+Computation time: 0.20679593086242676
+Expanded nodes: 1372
 
 Running command: python run.py --agent hminimax_gilles --ghost greedy --layout large_adv
-Score: 530
-Computation time: 3.1472833156585693
-Expanded nodes: 16718
+Score: 534
+Computation time: 0.9069411754608154
+Expanded nodes: 3972
 
 Running command: python run.py --agent hminimax_gilles --ghost smarty --layout small_adv
 Score: 516
-Computation time: 0.010085582733154297
-Expanded nodes: 57
+Computation time: 0.0
+Expanded nodes: 33
 
 Running command: python run.py --agent hminimax_gilles --ghost smarty --layout medium_adv
 Score: 539
-Computation time: 0.8626799583435059
-Expanded nodes: 5885
+Computation time: 0.22711491584777832
+Expanded nodes: 1332
 
 Running command: python run.py --agent hminimax_gilles --ghost smarty --layout large_adv
-Score: 530
-Computation time: 3.238706350326538
-Expanded nodes: 16718
+Score: 534
+Computation time: 0.8620519638061523
+Expanded nodes: 3972
 

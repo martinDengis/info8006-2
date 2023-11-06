@@ -7,7 +7,7 @@ class PacmanAgent(Agent):
     def __init__(self):
         super().__init__()
         self.initial_state = None  # To retrieve initial nb of food dots
-        self.depth = 4
+        self.depth = 3
 
     def get_action(self, state):
         """Given a Pacman game state, returns a legal move."""
