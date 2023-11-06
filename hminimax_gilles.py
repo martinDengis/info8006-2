@@ -49,14 +49,13 @@ class PacmanAgent(Agent):
         # Adjust score based on distance to the closest food dot
         if food_list:
             closest_food_dist = min(manhattanDistance(pacman_pos, food) for food in food_list)
-            score -= closest_food_dist
+            score -= 2 * closest_food_dist
 
-        # # Adjust score based on sum of distances to all food dots
+        # Adjust score based on sum of distances to all food dots
         # if food_list:
         #     food_distances = [manhattanDistance(pacman_pos, food) for food in food_list]
         #     sum_food_distances = sum(food_distances)
-        #     score -= sum_food_distances
-
+        #     score -= sum_food_distances/2
 
         return score
 
@@ -91,22 +90,14 @@ class PacmanAgent(Agent):
 
 
     def max_value(self, state, depth, agentIndex, alpha, beta):
-        """ Returns the maximum value and corresponding action 
-        for the given state and agent.
-
-        Arguments:
-            state: a game state. See API or class `pacman.GameState`.
-            depth: the current depth of the search tree.
-            agentIndex: the index of the current agent.
-            alpha: the current alpha value for a-B pruning.
-            beta: the current beta value for a-B pruning.
-
-        Return:
-            A tuple containing the maximum value and corresponding action.
-        """
         value = float('-inf')
         best_action = Directions.STOP
-        for s, a in state.generatePacmanSuccessors():
+
+        # Generate successors and order them by heuristic value
+        successors = state.generatePacmanSuccessors()
+        ordered_successors = sorted(successors, key=lambda x: self.heuristic_function(x[0]), reverse=True)
+
+        for s, a in ordered_successors:
             if agentIndex == state.getNumAgents() - 1:
                 new_value, _ = self.minimax(s, depth + 1, 0, alpha, beta)
             else:
@@ -119,31 +110,25 @@ class PacmanAgent(Agent):
         return value, best_action
 
     def min_value(self, state, depth, agentIndex, alpha, beta):
-        """ Returns the minimum value and corresponding action 
-        for the given state and agent.
-
-        Arguments:
-            state: a game state. See API or class `pacman.GameState`.
-            depth: the current depth of the search tree.
-            agentIndex: the index of the current agent.
-            alpha: the current alpha value for a-B pruning.
-            beta: the current beta value for a-B pruning.
-
-        Return:
-            A tuple containing the minimum value and corresponding action.
-        """
         value = float('inf')
-        for s, a in state.generateGhostSuccessors(agentIndex):
+        best_action = Directions.STOP
+
+        # Generate successors and order them by heuristic value
+        successors = state.generateGhostSuccessors(agentIndex)
+        ordered_successors = sorted(successors, key=lambda x: self.heuristic_function(x[0]))
+
+        for s, a in ordered_successors:
             if agentIndex == state.getNumAgents() - 1:
                 new_value, _ = self.minimax(s, depth + 1, 0, alpha, beta)
             else:
                 new_value, _ = self.minimax(s, depth, agentIndex + 1, alpha, beta)
             if new_value < value:
-                value = new_value
+                value, best_action = new_value, a
             if value < alpha:
-                return value, Directions.STOP
+                return value, best_action
             beta = min(beta, value)
-        return value, Directions.STOP
+        return value, best_action
+
 
     def utility_function(self, state):
         """Calculates the utility score of a given game state.
