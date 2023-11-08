@@ -44,11 +44,17 @@ class PacmanAgent(Agent):
             * self.initial_state.getFood().height
 
         # Define threshold to distinguish small-medium from large mazes
-        threshold = 10 * 10
+        small_threshold = 7 * 7
+        medium_threshold = 9 * 9
 
-        if maze_size <= threshold:
+        # remaining_food = state.getNumFood()
+        if maze_size <= small_threshold:
             self.depth = 1
+        elif maze_size <= medium_threshold:
+         # Adjustments for small maze
+            self.depth = 2
         else:
+            # Adjustments for large maze
             self.depth = 4
 
     def is_next_win(self, state):

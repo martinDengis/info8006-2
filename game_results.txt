@@ -1,45 +1,52 @@
 Running command: python run.py --agent martin --ghost dumby --layout small_adv
-Score: 516
-Computation time: 0.007364749908447266
-Expanded nodes: 7
+Score: -492
+Computation time: 0.0015697479248046875
+Expanded nodes: 3
+Score dropped below -50, terminating this run.
 
 Running command: python run.py --agent martin --ghost dumby --layout medium_adv
-Score: 539
-Computation time: 0.053072452545166016
-Expanded nodes: 42
+Score: 531
+Computation time: 0.04533648490905762
+Expanded nodes: 102
 
 Running command: python run.py --agent martin --ghost dumby --layout large_adv
-Score: 536
-Computation time: 19.33768320083618
-Expanded nodes: 16600
+No score found in the output.
+No computation time found in the output.
+No expanded nodes count found in the output.
 
 Running command: python run.py --agent martin --ghost greedy --layout small_adv
-Score: 516
-Computation time: 0.007995128631591797
-Expanded nodes: 7
+Score: -492
+Computation time: 0.0
+Expanded nodes: 3
+Score dropped below -50, terminating this run.
 
 Running command: python run.py --agent martin --ghost greedy --layout medium_adv
-Score: 537
-Computation time: 0.06873655319213867
-Expanded nodes: 44
+Score: -493
+Computation time: 0.007700443267822266
+Expanded nodes: 33
+Score dropped below -50, terminating this run.
 
 Running command: python run.py --agent martin --ghost greedy --layout large_adv
-Score: 534
-Computation time: 15.451620817184448
-Expanded nodes: 11723
+Score: -505
+Computation time: 0.04820847511291504
+Expanded nodes: 142
+Score dropped below -50, terminating this run.
 
 Running command: python run.py --agent martin --ghost smarty --layout small_adv
-Score: 516
-Computation time: 0.012470245361328125
-Expanded nodes: 7
+Score: -492
+Computation time: 0.005032062530517578
+Expanded nodes: 3
+Score dropped below -50, terminating this run.
 
 Running command: python run.py --agent martin --ghost smarty --layout medium_adv
-Score: 537
-Computation time: 0.11067628860473633
-Expanded nodes: 44
+Score: -493
+Computation time: 0.016239643096923828
+Expanded nodes: 33
+Score dropped below -50, terminating this run.
 
 Running command: python run.py --agent martin --ghost smarty --layout large_adv
-Score: 534
-Computation time: 13.657814502716064
-Expanded nodes: 11723
+Score: -505
+Computation time: 0.04832124710083008
+Expanded nodes: 142
+Score dropped below -50, terminating this run.
 

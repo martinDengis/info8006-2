@@ -24,36 +24,20 @@ class PacmanAgent(Agent):
         maze_size = maze_width * maze_height
 
         # Define thresholds for small, medium, and large mazes
-        small_threshold = 10 * 10
-        medium_threshold = 20 * 20
+        small_threshold = 7 * 7
+        medium_threshold = 9 * 9
 
         # Dynamic depth adjustment based on the remaining food and maze size
         remaining_food = len(state.getFood().asList())
         # remaining_food = state.getNumFood()
         if maze_size <= small_threshold:
-            # Adjustments for small maze
-            if remaining_food < 3:
-                self.depth = 4
-            elif remaining_food < 5:
-                self.depth = 3
-            else:
-                self.depth = 2
+            self.depth = 1
         elif maze_size <= medium_threshold:
-            # Adjustments for medium maze
-            if remaining_food < 3:
-                self.depth = 5
-            elif remaining_food < 5:
-                self.depth = 4
-            else:
-                self.depth = 3
+         # Adjustments for small maze
+            self.depth = 2
         else:
             # Adjustments for large maze
-            if remaining_food < 3:
-                self.depth = 6
-            elif remaining_food < 5:
-                self.depth = 5
-            else:
-                self.depth = 4
+            self.depth = 4
 
         _, next_move = self.hminimax(state)
         return next_move
