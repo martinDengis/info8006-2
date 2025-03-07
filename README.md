@@ -23,11 +23,3 @@ Several strategies are available for the ghost:
 - `smarty` selects the action leading to the shortest path towards Pacman.
 
 The random seed of the game can be changed with the `--seed` option (e.g. `--seed 42`).
-
-## Evaluation
-
-Your project will be evaluated as follow:
-
-- **Minimax** (45%): We evaluate the optimality of your implementation on both public and private layouts.
-- **H-Minimax** (50%): We evaluate the performance of your implementation on both public and private layouts. Both the score and the number of expanded nodes are taken into account.
-- **Code style** (5%): No points are awarded if your code is not PEP-8 compliant.
